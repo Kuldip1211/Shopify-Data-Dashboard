@@ -1,0 +1,77 @@
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.orders-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 80px;
+}
+
+.orders-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 24px;
+  flex-wrap: wrap;
+}
+
+/* Left Section (Table) */
+.orders-table-section {
+  flex: 1;
+  min-width: 450px;
+  max-width: 55%;
+  background: #f9fafb;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.orders-table-section h2 {
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Right Section (Chart) */
+.chart-section {
+  flex: 1;
+  min-width: 350px;
+  max-width: 40%;
+  text-align: center;
+  background: #f9fafb;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.chart-section h2 {
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.chart-container {
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
