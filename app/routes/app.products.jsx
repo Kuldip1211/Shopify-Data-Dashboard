@@ -1,13 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import Chart from "chart.js/auto";
+import { useEffect, useState } from "react";
+import { Page, Card, Spinner, Text } from "@shopify/polaris";
 
-export default function ProductsChart() {
+export default function ProductsTable() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const chartRef = useRef(null);
-  const chartInstance = useRef(null);
 
-  // 🧠 Fetch products on load
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -34,99 +31,159 @@ export default function ProductsChart() {
     }
   }
 
-  // 🧩 Render chart after data is loaded
-  useEffect(() => {
-    if (!loading && products.length > 0) {
-      const ctx = chartRef.current.getContext("2d");
-
-      // Destroy old chart before creating a new one (important for re-renders)
-      if (chartInstance.current) {
-        chartInstance.current.destroy();
-      }
-
-      chartInstance.current = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: products.map((p) => p.title),
-          datasets: [
-            {
-              label: "Total Quantity",
-              data: products.map((p) => p.totalQuantity),
-              backgroundColor: "rgba(0, 128, 96, 0.7)",
-              borderColor: "#008060",
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: "top" },
-            title: {
-              display: true,
-              text: "🛍 Product Inventory Overview",
-              font: { size: 18 },
-            },
-          },
-          scales: {
-            x: {
-              title: { display: true, text: "Product Name", font: { size: 14 } },
-              ticks: { maxRotation: 45, minRotation: 45 },
-            },
-            y: {
-              title: { display: true, text: "Total Quantity", font: { size: 14 } },
-              beginAtZero: true,
-            },
-          },
-        },
-      });
-    }
-  }, [products, loading]);
-
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>📊 Shopify Products Quantity Chart</h2>
+    <Page title="📦 Product Inventory Overview">
+      <Card>
+        {loading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              padding: "40px",
+            }}
+          >
+            <Spinner accessibilityLabel="Loading products" size="large" />
+          </div>
+        ) : products.length === 0 ? (
+          <div style={{ padding: "20px", textAlign: "center" }}>
+            <Text as="p" variant="bodyMd">
+              No products found.
+            </Text>
+          </div>
+        ) : (
+          <div
+            style={{
+              padding: "20px",
+              overflowX: "auto",
+              overflowY: "auto",
+              whiteSpace: "nowrap",
+              scrollbarWidth: "thin",
+              maxHeight: "500px",
+              display: "flex",
+              justifyContent: "flex-start",
+            }}
+          >
+            <table
+              style={{
+                borderCollapse: "collapse",
+                backgroundColor: "#ffffff",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                borderRadius: "12px",
+                minWidth: "600px",
+                fontFamily: "'Poppins', sans-serif",
+              }}
+            >
+              <thead style={{ backgroundColor: "#f9fafb" }}>
+                <tr>
+                  <th
+                    style={{
+                      textAlign: "left",
+                      padding: "14px 18px",
+                      fontWeight: "600",
+                      color: "#202223",
+                      borderBottom: "1px solid #e1e3e5",
+                      fontFamily: "'Poppins', sans-serif",
+                    }}
+                  >
+                    Product Name
+                  </th>
+                  <th
+                    style={{
+                      textAlign: "right",
+                      padding: "14px 18px",
+                      fontWeight: "600",
+                      color: "#202223",
+                      borderBottom: "1px solid #e1e3e5",
+                      fontFamily: "'Poppins', sans-serif",
+                    }}
+                  >
+                    Total Quantity
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product, index) => (
+                  <tr
+                    key={index}
+                    style={{
+                      backgroundColor: index % 2 === 0 ? "#ffffff" : "#f6f6f7",
+                      transition: "background-color 0.2s ease",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#eef6f6")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.backgroundColor =
+                        index % 2 === 0 ? "#ffffff" : "#f6f6f7")
+                    }
+                  >
+                    <td
+                      style={{
+                        padding: "14px 18px",
+                        color: "#202223",
+                        fontFamily: "'Poppins', sans-serif",
+                      }}
+                    >
+                      {product.title}
+                    </td>
+                    <td
+                      style={{
+                        padding: "14px 18px",
+                        textAlign: "right",
+                        fontWeight: "500",
+                        color: "#008060",
+                        fontFamily: "'Poppins', sans-serif",
+                      }}
+                    >
+                      {product.totalQuantity}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td
+                    colSpan="2"
+                    style={{
+                      padding: "14px 18px",
+                      textAlign: "right",
+                      borderTop: "1px solid #e1e3e5",
+                      fontWeight: "600",
+                      color: "#202223",
+                      fontFamily: "'Poppins', sans-serif",
+                    }}
+                  >
+                    Total Products: {products.length}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        )}
+      </Card>
 
-      {loading ? (
-        <p style={styles.loading}>Fetching products...</p>
-      ) : products.length === 0 ? (
-        <p style={styles.noData}>No products found.</p>
-      ) : (
-        <div style={styles.chartContainer}>
-          <canvas ref={chartRef} width="800" height="400"></canvas>
-        </div>
-      )}
-    </div>
+      {/* ✅ Include Google Fonts */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+        rel="stylesheet"
+      />
+
+      {/* ✅ Custom Scrollbar Styles */}
+      <style>
+        {`
+          div::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+          }
+          div::-webkit-scrollbar-thumb {
+            background-color: #c9c9c9;
+            border-radius: 8px;
+          }
+          div::-webkit-scrollbar-thumb:hover {
+            background-color: #a8a8a8;
+          }
+        `}
+      </style>
+    </Page>
   );
 }
-
-const styles = {
-  container: {
-    padding: "30px",
-    fontFamily: "'Inter', sans-serif",
-    backgroundColor: "#f9fafb",
-    minHeight: "100vh",
-  },
-  title: {
-    fontSize: "24px",
-    fontWeight: "600",
-    marginBottom: "20px",
-    color: "#202223",
-  },
-  loading: {
-    fontSize: "18px",
-    color: "#6b7280",
-  },
-  noData: {
-    fontSize: "18px",
-    color: "#9ca3af",
-  },
-  chartContainer: {
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    padding: "20px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
-    height: "450px",
-  },
-};
