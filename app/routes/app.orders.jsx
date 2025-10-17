@@ -23,9 +23,11 @@ ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend);
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [drafts, setDrafts] = useState([]);
+  const [loadingOrders, setLoadingOrders] = useState(true);
+  const [loadingDrafts, setLoadingDrafts] = useState(true);
 
-  // 🔹 Fetch orders
+  // 🔹 Fetch Orders
   useEffect(() => {
     async function fetchOrders() {
       try {
@@ -35,21 +37,34 @@ export default function OrdersPage() {
       } catch (error) {
         console.error("Error fetching orders:", error);
       } finally {
-        setLoading(false);
+        setLoadingOrders(false);
       }
     }
     fetchOrders();
   }, []);
 
-  // 🔸 Prepare data for Polar Area Chart
-  const paymentStatusCounts = orders.reduce(
-    (acc, order) => {
-      const status = order.paymentStatus?.toUpperCase() || "UNKNOWN";
-      acc[status] = (acc[status] || 0) + 1;
-      return acc;
-    },
-    {}
-  );
+  // 🔹 Fetch Draft Orders
+  useEffect(() => {
+    async function fetchDrafts() {
+      try {
+        const res = await fetch("/api/draftsOrders");
+        const data = await res.json();
+        setDrafts(data.drafts || []);
+      } catch (error) {
+        console.error("Error fetching drafts:", error);
+      } finally {
+        setLoadingDrafts(false);
+      }
+    }
+    fetchDrafts();
+  }, []);
+
+  // 🔸 Prepare Chart Data
+  const paymentStatusCounts = orders.reduce((acc, order) => {
+    const status = order.paymentStatus?.toUpperCase() || "UNKNOWN";
+    acc[status] = (acc[status] || 0) + 1;
+    return acc;
+  }, {});
 
   const chartData = {
     labels: Object.keys(paymentStatusCounts),
@@ -80,10 +95,11 @@ export default function OrdersPage() {
     <Page fullWidth>
       <div className="dashboard-header">
         <h1>📦 Shopify Orders Dashboard</h1>
-        <p>Track your order quantities and payment statuses in real time.</p>
+        <p>Track your orders, payment statuses, and draft orders in real time.</p>
       </div>
 
-      {loading ? (
+      {/* ================= ORDERS SECTION ================= */}
+      {loadingOrders ? (
         <div className="orders-loader">
           <Spinner accessibilityLabel="Loading orders" size="large" />
           <Text variant="headingMd" as="p" tone="subdued">
@@ -95,7 +111,7 @@ export default function OrdersPage() {
           <div className="orders-container">
             {/* 🧾 Left: Orders Table */}
             <div className="orders-table-section">
-              <h2>🧾 Orders Overview</h2>
+              <h2 className="section-title">🧾 Orders Overview</h2>
               {orders.length === 0 ? (
                 <Box padding="8" align="center" textAlign="center">
                   <Text variant="bodyLg" as="p" tone="subdued">
@@ -135,9 +151,9 @@ export default function OrdersPage() {
               )}
             </div>
 
-            {/* 📊 Right: Payment Status Chart */}
+            {/* 📊 Right: Chart Section */}
             <div className="chart-section">
-              <h2>📊 Payment Status Summary</h2>
+              <h2 className="section-title">📊 Payment Status Summary</h2>
               {orders.length === 0 ? (
                 <Text variant="bodyLg" as="p" tone="subdued">
                   No orders found to display chart.
@@ -151,6 +167,56 @@ export default function OrdersPage() {
           </div>
         </Card>
       )}
+
+      {/* ================= DRAFT ORDERS SECTION ================= */}
+      <div className="draft-orders-wrapper">
+        <Card>
+          <h2 className="section-title">📝 Draft Orders</h2>
+          {loadingDrafts ? (
+            <Box padding="600" alignment="center">
+              <Spinner accessibilityLabel="Loading draft orders" size="large" />
+            </Box>
+          ) : drafts.length === 0 ? (
+            <Box padding="8" align="center" textAlign="center">
+              <Text variant="bodyLg" as="p" tone="subdued">
+                No draft orders found.
+              </Text>
+            </Box>
+          ) : (
+            <Scrollable shadow style={{ maxHeight: "65vh", overflowX: "hidden" }}>
+              <div className="draft-table-container">
+                <DataTable
+                  columnContentTypes={[
+                    "text",
+                    "text",
+                    "text",
+                    "text",
+                    "text",
+                    "text",
+                  ]}
+                  headings={[
+                    "ID",
+                    "Name",
+                    "Email",
+                    "Total",
+                    "Status",
+                    "Created At",
+                  ]}
+                  rows={drafts.map((order) => [
+                    order.id,
+                    order.name,
+                    order.email || "N/A",
+                    order.total_price ? `$${order.total_price}` : "—",
+                    order.status,
+                    new Date(order.created_at).toLocaleDateString(),
+                  ])}
+                  hoverable
+                />
+              </div>
+            </Scrollable>
+          )}
+        </Card>
+      </div>
     </Page>
   );
 }

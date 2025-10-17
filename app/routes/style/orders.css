@@ -1,16 +1,30 @@
+/* 🌟 Dashboard Header */
 .dashboard-header {
   text-align: center;
   margin-bottom: 20px;
 }
 
+.dashboard-header h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.dashboard-header p {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+/* 🔄 Loader */
 .orders-loader {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  margin-top: 80px;
+  margin-top: 60px;
 }
 
+/* 🧱 Orders Container */
 .orders-container {
   display: flex;
   justify-content: space-between;
@@ -20,7 +34,7 @@
   flex-wrap: wrap;
 }
 
-/* Left Section (Table) */
+/* 🧾 Left: Orders Table */
 .orders-table-section {
   flex: 1;
   min-width: 450px;
@@ -31,47 +45,102 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-.orders-table-section h2 {
-  margin-bottom: 16px;
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-/* Right Section (Chart) */
+/* 📊 Right: Chart Section */
 .chart-section {
   flex: 1;
   min-width: 350px;
   max-width: 40%;
-  text-align: center;
   background: #f9fafb;
   padding: 16px;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  text-align: center;
 }
 
-.chart-section h2 {
-  margin-bottom: 16px;
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
+/* 🧭 Chart Styling */
 .chart-container {
+  margin-top: 16px;
+  height: 350px;
+}
+
+/* 📝 Draft Orders Section */
+.draft-orders-wrapper {
+  margin-top: 40px;
+  padding: 16px 24px;
+}
+
+/* 🔠 Section Titles */
+.section-title {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 12px;
+}
+
+/* 🧩 Table Styling */
+.draft-table-container {
   width: 100%;
-  max-width: 350px;
-  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  padding: 12px;
 }
 
-/* Scrollbar Styling */
-::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
+/* 🪄 Polaris Table Look */
+.Polaris-DataTable__Table {
+  width: 100%;
+  border-collapse: separate !important;
+  border-spacing: 0;
+  border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #bbb;
-  border-radius: 6px;
+/* 🧷 Sticky Header for Both Tables */
+.Polaris-DataTable__Table thead {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #e5e7eb !important; /* light gray background */
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #999;
+/* 🌈 Header Text Enhancements */
+.Polaris-DataTable__Table thead th {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  padding: 12px 10px;
+  color: #111827;
+  letter-spacing: 0.3px;
+  background-color: #f3f4f6;
+}
+
+/* 🧍‍♂️ Center Align All Table Cells */
+.Polaris-DataTable__Cell {
+  text-align: center;
+  font-size: 14px;
+  padding: 10px 12px;
+}
+
+/* ✨ Hover Row */
+.Polaris-DataTable__Table tbody tr:hover {
+  background-color: #f9fafb;
+  transition: background 0.3s ease;
+}
+
+/* 🚫 Scroll Behavior */
+.Polaris-Scrollable {
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+}
+
+/* 📱 Responsive */
+@media (max-width: 1024px) {
+  .orders-container {
+    flex-direction: column;
+  }
+
+  .orders-table-section,
+  .chart-section {
+    max-width: 100%;
+  }
 }
