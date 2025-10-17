@@ -18,6 +18,7 @@ import {
 } from "chart.js";
 import "@shopify/polaris/build/esm/styles.css";
 import "./style/orders.css";
+import Chartcomponent from "./app.OrdersBarChart";
 
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend);
 
@@ -25,6 +26,7 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const [drafts, setDrafts] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
+  const [loadingChart, setLoadingChart] = useState(true);
   const [loadingDrafts, setLoadingDrafts] = useState(true);
 
   // 🔹 Fetch Orders
@@ -33,11 +35,14 @@ export default function OrdersPage() {
       try {
         const response = await fetch("/api/order");
         const data = await response.json();
-        if (data && data.orders) setOrders(data.orders);
+        if (data && data.orders) {
+          setOrders(data.orders);
+        }
       } catch (error) {
         console.error("Error fetching orders:", error);
       } finally {
         setLoadingOrders(false);
+        setLoadingChart(false);
       }
     }
     fetchOrders();
@@ -98,84 +103,92 @@ export default function OrdersPage() {
         <p>Track your orders, payment statuses, and draft orders in real time.</p>
       </div>
 
-      {/* ================= ORDERS SECTION ================= */}
-      {loadingOrders ? (
-        <div className="orders-loader">
-          <Spinner accessibilityLabel="Loading orders" size="large" />
-          <Text variant="headingMd" as="p" tone="subdued">
-            Fetching latest orders...
-          </Text>
-        </div>
-      ) : (
-        <Card>
-          <div className="orders-container">
-            {/* 🧾 Left: Orders Table */}
-            <div className="orders-table-section">
-              <h2 className="section-title">🧾 Orders Overview</h2>
-              {orders.length === 0 ? (
-                <Box padding="8" align="center" textAlign="center">
-                  <Text variant="bodyLg" as="p" tone="subdued">
-                    No orders found.
-                  </Text>
-                </Box>
-              ) : (
-                <Scrollable
-                  shadow
-                  style={{
-                    maxHeight: "70vh",
-                    overflowX: "auto",
-                    overflowY: "auto",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <Box padding="4" minWidth="100%">
-                    <DataTable
-                      columnContentTypes={["text", "text", "numeric", "text"]}
-                      headings={[
-                        "Order ID",
-                        "Order Name",
-                        "Total Quantity",
-                        "Payment Status",
-                      ]}
-                      rows={orders.map((order) => [
-                        order.id.split("/").pop(),
-                        order.name,
-                        order.totalQuantity,
-                        order.paymentStatus,
-                      ])}
-                      increasedTableDensity
-                      hoverable
-                    />
-                  </Box>
-                </Scrollable>
-              )}
-            </div>
-
-            {/* 📊 Right: Chart Section */}
-            <div className="chart-section">
-              <h2 className="section-title">📊 Payment Status Summary</h2>
-              {orders.length === 0 ? (
-                <Text variant="bodyLg" as="p" tone="subdued">
-                  No orders found to display chart.
+      {/* ================= ORDERS + CHART SECTION ================= */}
+      <Card>
+        <div className="orders-container">
+          {/* 🧾 Left: Orders Table */}
+          <div className="orders-table-section">
+            <h2 className="section-title">🧾 Orders Overview</h2>
+            {loadingOrders ? (
+              <div className="table-loader">
+                <Spinner accessibilityLabel="Loading orders" size="large" />
+                <Text variant="bodyMd" tone="subdued">
+                  Fetching latest orders...
                 </Text>
-              ) : (
-                <div className="chart-container">
-                  <PolarArea data={chartData} options={chartOptions} />
-                </div>
-              )}
-            </div>
+              </div>
+            ) : orders.length === 0 ? (
+              <Box padding="8" align="center" textAlign="center">
+                <Text variant="bodyLg" as="p" tone="subdued">
+                  No orders found.
+                </Text>
+              </Box>
+            ) : (
+              <Scrollable
+                shadow
+                style={{
+                  maxHeight: "70vh",
+                  overflowX: "auto",
+                  overflowY: "auto",
+                  borderRadius: "10px",
+                }}
+              >
+                <Box padding="4" minWidth="100%">
+                  <DataTable
+                    columnContentTypes={["text", "text", "numeric", "text"]}
+                    headings={[
+                      "Order ID",
+                      "Order Name",
+                      "Total Quantity",
+                      "Payment Status",
+                    ]}
+                    rows={orders.map((order) => [
+                      order.id.split("/").pop(),
+                      order.name,
+                      order.totalQuantity,
+                      order.paymentStatus,
+                    ])}
+                    increasedTableDensity
+                    hoverable
+                  />
+                </Box>
+              </Scrollable>
+            )}
           </div>
-        </Card>
-      )}
+
+          {/* 📊 Right: Chart Section */}
+          <div className="chart-section">
+            <h2 className="section-title">📊 Payment Status Summary</h2>
+            {loadingChart ? (
+              <div className="chart-loader">
+                <Spinner accessibilityLabel="Loading chart" size="large" />
+                <Text variant="bodyMd" tone="subdued">
+                  Generating chart data...
+                </Text>
+              </div>
+            ) : orders.length === 0 ? (
+              <Text variant="bodyLg" as="p" tone="subdued">
+                No orders found to display chart.
+              </Text>
+            ) : (
+              <div className="chart-container">
+                <PolarArea data={chartData} options={chartOptions} />
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
 
       {/* ================= DRAFT ORDERS SECTION ================= */}
       <div className="draft-orders-wrapper">
         <Card>
           <h2 className="section-title">📝 Draft Orders</h2>
           {loadingDrafts ? (
-            <Box padding="600" alignment="center">
+            <div className="table-loader">
               <Spinner accessibilityLabel="Loading draft orders" size="large" />
-            </Box>
+              <Text variant="bodyMd" tone="subdued">
+                Fetching draft orders...
+              </Text>
+            </div>
           ) : drafts.length === 0 ? (
             <Box padding="8" align="center" textAlign="center">
               <Text variant="bodyLg" as="p" tone="subdued">
@@ -217,6 +230,7 @@ export default function OrdersPage() {
           )}
         </Card>
       </div>
+      <Chartcomponent/>
     </Page>
   );
 }

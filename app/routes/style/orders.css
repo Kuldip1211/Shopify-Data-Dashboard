@@ -15,15 +15,6 @@
   color: #6b7280;
 }
 
-/* 🔄 Loader */
-.orders-loader {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  margin-top: 60px;
-}
-
 /* 🧱 Orders Container */
 .orders-container {
   display: flex;
@@ -34,7 +25,7 @@
   flex-wrap: wrap;
 }
 
-/* 🧾 Left: Orders Table */
+/* 🧾 Orders Table Section */
 .orders-table-section {
   flex: 1;
   min-width: 450px;
@@ -45,7 +36,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-/* 📊 Right: Chart Section */
+/* 📊 Chart Section */
 .chart-section {
   flex: 1;
   min-width: 350px;
@@ -57,64 +48,44 @@
   text-align: center;
 }
 
-/* 🧭 Chart Styling */
-.chart-container {
-  margin-top: 16px;
-  height: 350px;
-}
-
-/* 📝 Draft Orders Section */
-.draft-orders-wrapper {
-  margin-top: 40px;
-  padding: 16px 24px;
-}
-
-/* 🔠 Section Titles */
+/* 🧩 Section Titles */
 .section-title {
   text-align: center;
   font-size: 1.3rem;
   font-weight: 600;
   color: #111827;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
-/* 🧩 Table Styling */
-.draft-table-container {
-  width: 100%;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  padding: 12px;
+/* 🌀 Loader Styling */
+.table-loader,
+.chart-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 0;
 }
 
-/* 🪄 Polaris Table Look */
-.Polaris-DataTable__Table {
-  width: 100%;
-  border-collapse: separate !important;
-  border-spacing: 0;
-  border-radius: 10px;
-}
-
-/* 🧷 Sticky Header for Both Tables */
+/* 🧷 Sticky Header */
 .Polaris-DataTable__Table thead {
   position: sticky;
   top: 0;
   z-index: 5;
-  background: #e5e7eb !important; /* light gray background */
+  background: #e5e7eb !important;
 }
 
-/* 🌈 Header Text Enhancements */
+/* 🌈 Table Header */
 .Polaris-DataTable__Table thead th {
   font-size: 16px;
   font-weight: 600;
   text-align: center;
   padding: 12px 10px;
   color: #111827;
-  letter-spacing: 0.3px;
   background-color: #f3f4f6;
 }
 
-/* 🧍‍♂️ Center Align All Table Cells */
+/* 📦 Table Cells */
 .Polaris-DataTable__Cell {
   text-align: center;
   font-size: 14px;
@@ -127,10 +98,24 @@
   transition: background 0.3s ease;
 }
 
-/* 🚫 Scroll Behavior */
-.Polaris-Scrollable {
-  overflow-x: auto !important;
-  overflow-y: auto !important;
+/* 🧭 Chart Styling */
+.chart-container {
+  margin-top: 16px;
+  height: 350px;
+}
+
+/* 📝 Draft Section */
+.draft-orders-wrapper {
+  margin-top: 40px;
+  padding: 16px 24px;
+}
+
+.draft-table-container {
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  padding: 12px;
 }
 
 /* 📱 Responsive */
