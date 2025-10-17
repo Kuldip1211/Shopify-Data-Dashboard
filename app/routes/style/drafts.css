@@ -1,0 +1,31 @@
+.draft-table-container {
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  padding: 12px;
+}
+
+/* Polaris table look improvements */
+.Polaris-DataTable__Table {
+  width: 100%;
+  border-collapse: separate !important;
+  border-spacing: 0;
+  border-radius: 10px;
+}
+
+.Polaris-DataTable__Table tbody tr:hover {
+  background-color: #f9fafb;
+  transition: background 0.3s ease;
+}
+
+.Polaris-DataTable__Cell {
+  font-size: 14px;
+  padding: 10px 12px;
+}
+
+/* ✅ Disable horizontal scroll, allow vertical only */
+.Polaris-Scrollable {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
