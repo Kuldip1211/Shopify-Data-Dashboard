@@ -1,0 +1,14 @@
+.bar-chart-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  height: 400px;
+}
+
+.chart-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 0;
+}
